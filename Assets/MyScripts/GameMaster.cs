@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class GameMaster : MonoBehaviour {
 
+    public List<bool> hasButtonClicked;
+
     public string alphabet = "abcdefghijklmnopqrstuvwxyz";
     public GameObject[] buttonArray;
     public List<Text> curLetters;
@@ -15,6 +17,7 @@ public class GameMaster : MonoBehaviour {
         for (int i = 0; i < buttonArray.Length; i++)
         {
             curLetters.Add(buttonArray[i].GetComponentInChildren<Text>());
+            hasButtonClicked.Add(false);
         }
 
         for(int i = 0; i < curLetters.Count; i++)
