@@ -44,7 +44,7 @@ public class TouchListener : MonoBehaviour {
                 visibleDebug.text = Input.touchCount.ToString();
             }
 
-        }else if(device == RuntimePlatform.WindowsEditor)
+        }else if(device == RuntimePlatform.WindowsEditor || device == RuntimePlatform.OSXEditor)
         {
             if (Input.GetMouseButtonDown(0))
             {
