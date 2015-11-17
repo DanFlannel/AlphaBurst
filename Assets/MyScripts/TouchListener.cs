@@ -18,6 +18,7 @@ public class TouchListener : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        //Input.simulateMouseWithTouches = true;
         charInput.text = "";
         gm = Camera.main.GetComponent<GameMaster>();
         buttonArray = GameObject.FindGameObjectsWithTag("Button");
@@ -29,7 +30,7 @@ public class TouchListener : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+        visibleDebug.text = Input.touchCount.ToString();
         if (Input.touchCount > 0)
         {
             visibleDebug.text = "found a touch!";
