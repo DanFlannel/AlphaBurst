@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using System;
+using UnityEngine.EventSystems;
 
 public class TouchListener : MonoBehaviour {
 
@@ -65,36 +66,50 @@ public class TouchListener : MonoBehaviour {
         Vector3 screen_world = Camera.main.ScreenToWorldPoint(pos);
         Vector2 touchPosition = new Vector2(screen_world.x, screen_world.y);
 
-        //listens for all interactions between the touch position and the box colliders
-        for (int i = 0; i < colliderlist.Count; i++)
+        ButtonControls buttonInspector;
+        Collider2D hitColl;
+
+        RaycastHit2D rayHit = Physics2D.Raycast(touchPosition, Vector2.zero);
+
+        Ray ray = Camera.main.ScreenPointToRay(pos);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
         {
-            ButtonControls buttonInspector = buttonArray[i].GetComponent<ButtonControls>();
-            Collider2D temp = colliderlist[i];
-            if (temp == Physics2D.OverlapPoint(touchPosition))
+            Debug.Log(hit.transform.name);
+        }
+
+        if (rayHit)
+        {
+            Debug.Log(rayHit.collider.name);
+        }
+
+        if (Physics2D.OverlapPoint(touchPosition,5))
+        {
+            hitColl = Physics2D.OverlapPoint(touchPosition);
+            buttonInspector = hitColl.GetComponent<ButtonControls>();
+
+            visibleDebug.text = "hit a button";
+            //Debug.Log("hit button" + hit.name);
+            if (curButton != -1)    //if this isnt the first button we have clicked
             {
-                visibleDebug.text = "hit a button";
-                Debug.Log("hit button" + buttonArray[i].name);
-                if (curButton != -1)    //if this isnt the first button we have clicked
+                visibleDebug.text = "we have hit another button";
+                //check to make sure that the only buttons we interact with are ones that are linked
+                for (int j = 0; j < curInteractableButtons.Count; j++)
                 {
-                    visibleDebug.text = "we have hit another button";
-                    //check to make sure that the only buttons we interact with are ones that are linked
-                    for (int j = 0; j < curInteractableButtons.Count; j++)
+                    if (buttonInspector.number == curInteractableButtons[j])
                     {
-                        if (buttonInspector.number == curInteractableButtons[j])
-                        {
-                            charInput.text += buttonInspector.curChar;
-                            //we hit a button that we can touch
-                        }
+                        charInput.text += buttonInspector.curChar;
+                        //we hit a button that we can touch
                     }
                 }
-                else
-                {
-                    visibleDebug.text = "we hit our first button";
-                    curInteractableButtons = buttonInspector.interactableButtons;
-                    charInput.text = buttonInspector.curChar;
-                    curButton = buttonInspector.number;
-                    buttonInspector.sendClickedMessage();
-                }
+            }
+            else
+            {
+                visibleDebug.text = "we hit our first button";
+                curInteractableButtons = buttonInspector.interactableButtons;
+                charInput.text = buttonInspector.curChar;
+                curButton = buttonInspector.number;
+                buttonInspector.sendClickedMessage();
             }
         }
         /*if (t.phase == TouchPhase.Ended)
@@ -104,6 +119,17 @@ public class TouchListener : MonoBehaviour {
             charInput.text = "";
             //checkTheString
         }*/
-    }        
+    }
+    
+    private void UITouchDetect(Touch touch)
+    {
+        EventSystem eventSystem = EventSystem.current;
+        PointerEventData eventData;
+        int pointerID = touch.fingerId;
+        List<RaycastResult> rr = new List<RaycastResult>();
+        /*if (EventSystem.current.RaycastAll(eventData, rr)){
+            Debug.Log(EventSystem.current.)
+        }*/
+    }       
 }
 
