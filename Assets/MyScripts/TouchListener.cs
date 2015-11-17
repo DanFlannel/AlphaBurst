@@ -20,7 +20,7 @@ public class TouchListener : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        //Input.simulateMouseWithTouches = true;
+        Input.simulateMouseWithTouches = true;
         charInput.text = "";
         gm = Camera.main.GetComponent<GameMaster>();
         buttonArray = GameObject.FindGameObjectsWithTag("Button");
@@ -38,7 +38,7 @@ public class TouchListener : MonoBehaviour {
         {
             if(Input.touchCount > 0)
             {
-                checkTouch(Input.touches[0].position);
+                //checkTouch();
             }
             else
             {
@@ -47,9 +47,9 @@ public class TouchListener : MonoBehaviour {
 
         }else if(device == RuntimePlatform.WindowsEditor || device == RuntimePlatform.OSXEditor)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButton(0))
             {
-                checkTouch(Input.mousePosition);
+                //checkTouch();                
             }
             if (Input.GetMouseButtonUp(0))
             {
@@ -57,79 +57,45 @@ public class TouchListener : MonoBehaviour {
             }
         }
     }
-    
-    private void checkTouch(Vector2 pos)
+
+    public void checkTouch(int n)
     {
-        visibleDebug.text = "found a touch!";
-        isTouching = true;
-
-        Vector3 screen_world = Camera.main.ScreenToWorldPoint(pos);
-        Vector2 touchPosition = new Vector2(screen_world.x, screen_world.y);
-
-        ButtonControls buttonInspector;
-        Collider2D hitColl;
-
-        RaycastHit2D rayHit = Physics2D.Raycast(touchPosition, Vector2.zero);
-
-        Ray ray = Camera.main.ScreenPointToRay(pos);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        if (!Input.GetMouseButton(0))
         {
-            Debug.Log(hit.transform.name);
+            return;
         }
 
-        if (rayHit)
+        ButtonControls buttonInspector = fetchControlls(n);
+        if (curButton != -1)    //if this isnt the first button we have clicked
         {
-            Debug.Log(rayHit.collider.name);
-        }
-
-        if (Physics2D.OverlapPoint(touchPosition,5))
-        {
-            hitColl = Physics2D.OverlapPoint(touchPosition);
-            buttonInspector = hitColl.GetComponent<ButtonControls>();
-
-            visibleDebug.text = "hit a button";
-            //Debug.Log("hit button" + hit.name);
-            if (curButton != -1)    //if this isnt the first button we have clicked
+            visibleDebug.text = "we have hit another button";
+            //check to make sure that the only buttons we interact with are ones that are linked
+            for (int j = 0; j < curInteractableButtons.Count; j++)
             {
-                visibleDebug.text = "we have hit another button";
-                //check to make sure that the only buttons we interact with are ones that are linked
-                for (int j = 0; j < curInteractableButtons.Count; j++)
+                if (buttonInspector.number == curInteractableButtons[j])
                 {
-                    if (buttonInspector.number == curInteractableButtons[j])
-                    {
-                        charInput.text += buttonInspector.curChar;
-                        //we hit a button that we can touch
-                    }
+                    charInput.text += buttonInspector.curChar;
+                    curButton = buttonInspector.number;
+                    curInteractableButtons = buttonInspector.interactableButtons;
+                    //we hit a button that we can touch
                 }
             }
-            else
-            {
-                visibleDebug.text = "we hit our first button";
-                curInteractableButtons = buttonInspector.interactableButtons;
-                charInput.text = buttonInspector.curChar;
-                curButton = buttonInspector.number;
-                buttonInspector.sendClickedMessage();
-            }
         }
-        /*if (t.phase == TouchPhase.Ended)
-        { //if the touch has ended
-
-            isTouching = false;
-            charInput.text = "";
-            //checkTheString
-        }*/
+        else
+        {
+            visibleDebug.text = "we hit our first button";
+            curInteractableButtons = buttonInspector.interactableButtons;
+            charInput.text = buttonInspector.curChar;
+            curButton = buttonInspector.number;
+            buttonInspector.sendClickedMessage();
+        }
     }
     
-    private void UITouchDetect(Touch touch)
+    private ButtonControls fetchControlls(int n)
     {
-        EventSystem eventSystem = EventSystem.current;
-        PointerEventData eventData;
-        int pointerID = touch.fingerId;
-        List<RaycastResult> rr = new List<RaycastResult>();
-        /*if (EventSystem.current.RaycastAll(eventData, rr)){
-            Debug.Log(EventSystem.current.)
-        }*/
-    }       
+        ButtonControls bc;
+        bc = GameObject.Find("Letter_" + n).GetComponent<ButtonControls>();
+        return bc;
+    }      
 }
 

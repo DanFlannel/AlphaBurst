@@ -12,4 +12,15 @@ public class ButtonTouchDetection : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    void OnMouseOver()
+    {
+        Debug.Log("the mouse is over this");
+    }
+
+    public void test()
+    {
+        if(Input.GetMouseButton(0))
+            Debug.Log("Working");
+    }
 }
