@@ -14,9 +14,10 @@ public class TouchListener : MonoBehaviour {
     public bool isTouching = false;
     private Touch info;
     public Text charInput;
-    public Text visibleDebug;
     public List<int> curInteractableButtons = new List<int>();
     private RuntimePlatform device = Application.platform;
+	private List<int> resetInteractions = new List<int>(new int[] {0,1,2,3,4,5,6,7,8});
+	public bool isInGame = true;
 
 	// Use this for initialization
 	void Start () {
@@ -46,7 +47,7 @@ public class TouchListener : MonoBehaviour {
             }
             else
             {
-                visibleDebug.text = Input.touchCount.ToString();
+
             }
 
         }else if(device == RuntimePlatform.WindowsEditor || device == RuntimePlatform.OSXEditor)
@@ -57,22 +58,26 @@ public class TouchListener : MonoBehaviour {
             }
             if (Input.GetMouseButtonUp(0))
             {
-                visibleDebug.text = Input.touchCount.ToString();
+
             }
         }
     }
 
     public void checkTouch(int n)
     {
-        if (!Input.GetMouseButton(0))
+		if (!isInGame) {
+			return;
+		}
+		//resets our interaction and checks teh dictionary if we let go or have multiple fingers on the screen
+        if (!Input.GetMouseButton(0) || Input.GetMouseButtonUp(0) || Input.touchCount > 1)
         {
+			curInteractableButtons = resetInteractions;
             return;
         }
 
         ButtonControls buttonInspector = fetchControlls(n);
         if (curButton != -1)    //if this isnt the first button we have clicked
         {
-            visibleDebug.text = "we have hit another button";
             //check to make sure that the only buttons we interact with are ones that are linked
             for (int j = 0; j < curInteractableButtons.Count; j++)
             {
@@ -87,7 +92,6 @@ public class TouchListener : MonoBehaviour {
         }
         else
         {
-            visibleDebug.text = "we hit our first button";
             curInteractableButtons = buttonInspector.interactableButtons;
             charInput.text = buttonInspector.curChar;
             curButton = buttonInspector.number;
