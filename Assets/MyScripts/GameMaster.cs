@@ -19,11 +19,6 @@ public class GameMaster : MonoBehaviour {
             curLetters.Add(buttonArray[i].GetComponentInChildren<Text>());
             hasButtonClicked.Add(false);
         }
-
-        for(int i = 0; i < curLetters.Count; i++)
-        {
-            Debug.Log(i + " " + curLetters[i].text);
-        }
     }
 	
 	// Update is called once per frame
