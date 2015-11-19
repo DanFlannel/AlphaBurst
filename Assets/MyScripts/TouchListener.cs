@@ -36,6 +36,7 @@ public class TouchListener : MonoBehaviour {
 
         if (Input.GetMouseButtonUp(0))
         {
+            curInteractableButtons = resetInteractions;
             charInput.text = "";
         }
 
