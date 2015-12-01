@@ -17,14 +17,18 @@ public class TouchListener : MonoBehaviour {
 
     private List<int> curInteractableButtons = new List<int>();         //list of interactable buttons as integers
 	private List<int> resetInteractions = new List<int>(new int[] {0,1,2,3,4,5,6,7,8}); //list of all buttons
+    private List<int> curUsedButtons = new List<int>();
 
     public TextAsset dictionary;
     private string[] dictionaryLines;
 
     public bool isInGame = true;
+    public bool hasTimeLeft = true;
+    private timer timeScript;
 
 	// Use this for initialization
 	void Start () {
+        timeScript = Camera.main.GetComponent<timer>();
         score.text = "0";
         points = 0;
         Input.simulateMouseWithTouches = true;              //makes the touches as if they were mouse touches
@@ -36,17 +40,35 @@ public class TouchListener : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (Input.GetMouseButtonUp(0))
+        if(timeScript.timerText.text == "Times Up!")
+        {
+            hasTimeLeft = false;
+        }
+
+        if (Input.GetMouseButtonUp(0) || Input.touchCount > 1)
         {
             curInteractableButtons = resetInteractions; //reset the ineractions so when we touch again we can touch any buttons
-            bool isWord = check_Dictionary(charInput.text);
-            if (isWord)
+            curButton = -1;                             //resets the button number interactions to -1 so we reset the touch listener
+            
+            bool isWord = check_Dictionary(charInput.text); //this checks to see if the letters are a word
+
+            if (isWord) //this means that we have a legal word
             {
                 int pointsToAdd = addScore(charInput.text);
                 points += pointsToAdd;
                 score.text = points.ToString();
-                //TODO Add to the score
+                
+                //this for loop changes all the used buttons to new random letters
+                for(int i = 0; i < curUsedButtons.Count; i++)
+                {
+                    ButtonControls bc = fetchControls(curUsedButtons[i]);
+                    int randomNum = UnityEngine.Random.Range(0, 103);
+                    char newChar = bc.letterFrequency(randomNum);
+                    bc.changeCharacter(newChar.ToString());
+                }
+
             }
+            curUsedButtons.Clear();
             charInput.text = "";                        //reset the text
         }
     }
@@ -56,7 +78,7 @@ public class TouchListener : MonoBehaviour {
     /// </summary>
     public void checkTouch(int n)
     {
-		if (!isInGame) {
+		if (!hasTimeLeft) {
 			return;
 		}
 		//resets our interaction and checks teh dictionary if we let go or have multiple fingers on the screen
@@ -69,22 +91,41 @@ public class TouchListener : MonoBehaviour {
         ButtonControls buttonInspector = fetchControls(n);
         if (curButton != -1)    //if this isnt the first button we have clicked
         {
-            //check to make sure that the only buttons we interact with are ones that are linked
-            for (int j = 0; j < curInteractableButtons.Count; j++)
+            bool isUsed = false;
+            //checks to make sure we havent used this button before
+            for (int k = 0; k < curUsedButtons.Count; k++)
             {
-                //checking for the correct button that we are now interacting with
-                if (buttonInspector.number == curInteractableButtons[j])
+                if (buttonInspector.number == curUsedButtons[k])    //if it is in this list we have used it before
                 {
-                    //we hit a button that we can touch
-                    charInput.text += buttonInspector.curChar;                      //add the text in the text box to our string
-                    curButton = buttonInspector.number;                             //set our curButton number to the new one
-                    curInteractableButtons = buttonInspector.interactableButtons;   //change what buttons we can now interact with
+                    isUsed = true;
+                }
+            }
+            if (!isUsed)    //if the buttons has not been used before for this word
+            {
+                //TODO change color in here!
+
+                //check to make sure that the only buttons we interact with are ones that are linked
+                for (int j = 0; j < curInteractableButtons.Count; j++)
+                {
+                    //checking for the correct button that we are now interacting with
+
+                    if (buttonInspector.number == curInteractableButtons[j])
+                    {
+                        //we hit a button that we can touch
+                        curUsedButtons.Add(buttonInspector.number);                     //adds the pressed button to a list of used buttons
+                        charInput.text += buttonInspector.curChar;                      //add the text in the text box to our string
+                        curButton = buttonInspector.number;                             //set our curButton number to the new one
+                        curInteractableButtons = buttonInspector.interactableButtons;   //change what buttons we can now interact with
+                    }
                 }
             }
         }
         else
         {
+            //TODO change color in here
+
             //this is the first button we have hit so we have to set everything
+            curUsedButtons.Add(buttonInspector.number);
             curInteractableButtons = buttonInspector.interactableButtons;
             charInput.text = buttonInspector.curChar;
             curButton = buttonInspector.number;
