@@ -1,6 +1,9 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+/// <summary>
+/// This class handles the countdown and display of the timer GUI
+/// </summary>
 
 public class timer: MonoBehaviour {
 	

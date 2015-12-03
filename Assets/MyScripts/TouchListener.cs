@@ -78,7 +78,7 @@ public class TouchListener : MonoBehaviour {
     /// </summary>
     public void checkTouch(int n)
     {
-		if (!hasTimeLeft) {
+		if (!hasTimeLeft) { //if there is no time left we dont do anything
 			return;
 		}
 		//resets our interaction and checks teh dictionary if we let go or have multiple fingers on the screen
