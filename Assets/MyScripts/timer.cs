@@ -8,6 +8,8 @@ using UnityEngine.UI;
 public class timer: MonoBehaviour {
 	
 	int seconds = 0;
+    private string mode;
+    private float gameModeTime;
 	public float startingTime = 120f;
 	public Text timerText;
     public bool isPaused = true;
@@ -15,6 +17,10 @@ public class timer: MonoBehaviour {
     public TouchListener tc;
 
 	void Start(){
+        gameModeTime = PlayerPrefs.GetFloat("time");
+        mode = PlayerPrefs.GetString("current_level");
+        Debug.Log(mode + "_" + gameModeTime);
+        startingTime = gameModeTime;
         isPaused = true;
         tc = Camera.main.GetComponent<TouchListener>();
 		seconds = (int)startingTime %60;
@@ -29,6 +35,10 @@ public class timer: MonoBehaviour {
         if (!isPaused && !isGameOver)
         {
             countdownTimer();
+        }
+        if (isGameOver)
+        {
+            setScore();
         }
 	}
 
@@ -52,11 +62,12 @@ public class timer: MonoBehaviour {
         }
     }
 
-    private void restartTimer(int length)
+    private void restartTimer()
     {
+        
         isPaused = false;
         isGameOver = false;
-        startingTime = length;
+        startingTime = PlayerPrefs.GetFloat("time");
     }
 
     private void resetButtons()
@@ -72,12 +83,17 @@ public class timer: MonoBehaviour {
 
     private void resetScore()
     {
-        //future reference to set the high score
-        if (PlayerPrefs.GetInt("HighScore") < tc.points) {
-            PlayerPrefs.SetInt("HighScore",tc.points);
-        }
         tc.points = 0;
         tc.score.text = tc.points.ToString();
+    }
+
+    private void setScore()
+    {
+        //future reference to set the high score
+        if (PlayerPrefs.GetInt(mode + "_" + gameModeTime) < tc.points)
+        {
+            PlayerPrefs.SetInt(mode + "_" + gameModeTime, tc.points);
+        }
     }
 
     public void pauseButton()
@@ -86,7 +102,7 @@ public class timer: MonoBehaviour {
         isPaused = true;
     }
 
-    public void playButton(int length)
+    public void playButton()
     {
         Debug.LogWarning("pressed play");
         if(startingTime > 0 && isPaused)
@@ -94,10 +110,15 @@ public class timer: MonoBehaviour {
             isPaused = false;
         }else if (startingTime <= 0)
         {
-            restartTimer(length);
+            restartTimer();
             resetButtons();
             resetScore();
         }
+    }
+
+    public void menu()
+    {
+        Application.LoadLevel("menu");
     }
 
 }
