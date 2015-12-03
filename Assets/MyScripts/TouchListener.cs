@@ -16,7 +16,7 @@ public class TouchListener : MonoBehaviour {
     public int points;
 
     private List<int> curInteractableButtons = new List<int>();         //list of interactable buttons as integers
-	private List<int> resetInteractions = new List<int>(new int[] {0,1,2,3,4,5,6,7,8}); //list of all buttons
+	public List<int> resetInteractions = new List<int>(new int[] {0,1,2,3,4,5,6,7,8}); //list of all buttons
     private List<int> curUsedButtons = new List<int>();
 
     public TextAsset dictionary;
@@ -40,18 +40,20 @@ public class TouchListener : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if(timeScript.timerText.text == "Times Up!")
-        {
-            hasTimeLeft = false;
-        }
-
         if (Input.GetMouseButtonUp(0) || Input.touchCount > 1)
         {
+            Debug.Log(charInput.text.Length);
             curInteractableButtons = resetInteractions; //reset the ineractions so when we touch again we can touch any buttons
             curButton = -1;                             //resets the button number interactions to -1 so we reset the touch listener
-            
-            bool isWord = check_Dictionary(charInput.text); //this checks to see if the letters are a word
-
+            bool isWord;
+            if (charInput.text.Length > 0)
+            {
+                isWord = check_Dictionary(charInput.text); //this checks to see if the letters are a word
+            }
+            else
+            {
+                isWord = false;
+            }
             if (isWord) //this means that we have a legal word
             {
                 int pointsToAdd = addScore(charInput.text);
@@ -78,9 +80,10 @@ public class TouchListener : MonoBehaviour {
     /// </summary>
     public void checkTouch(int n)
     {
-		if (!hasTimeLeft) { //if there is no time left we dont do anything
-			return;
-		}
+        if (timeScript.isPaused || timeScript.isGameOver)   //checks for if its paused or if the game is over
+        {
+            return;
+        }
 		//resets our interaction and checks teh dictionary if we let go or have multiple fingers on the screen
         if (!Input.GetMouseButton(0) || Input.GetMouseButtonUp(0) || Input.touchCount > 1)
         {
@@ -136,7 +139,7 @@ public class TouchListener : MonoBehaviour {
     /// <summary>
     /// fetches the buttonControls script from the right button
     /// </summary>
-    private ButtonControls fetchControls(int n)
+    public ButtonControls fetchControls(int n)
     {
         ButtonControls bc;
         bc = GameObject.Find("Letter_" + n).GetComponent<ButtonControls>();
