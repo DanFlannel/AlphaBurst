@@ -9,9 +9,7 @@ using System.Text.RegularExpressions;
 
 public class TouchListener : MonoBehaviour {
 
-    public GameMaster gm;
-    public timer timeScript;
-
+    private GameMaster gm;
     public int curButton = -1;      //our current button number
     public Text charInput;          //the text that the button letters will be added to
     public Text score;
@@ -19,34 +17,23 @@ public class TouchListener : MonoBehaviour {
 
     private List<int> curInteractableButtons = new List<int>();         //list of interactable buttons as integers
 	public List<int> resetInteractions = new List<int>(new int[] {0,1,2,3,4,5,6,7,8}); //list of all buttons
-    public List<int> curUsedButtons = new List<int>();
+    private List<int> curUsedButtons = new List<int>();
 
     public TextAsset dictionary;
     private string[] dictionaryLines;
 
     public bool isInGame = true;
     public bool hasTimeLeft = true;
-    
-    public Color highlightedTextColor;
-    public Color highlightedButtonColor;
+    private timer timeScript;
 
-    private Color origionalButtonColor;
-    private Color origionalTextColor;
-
-
-    // Use this for initialization
-    void Start () {
-        origionalButtonColor = GameObject.Find("Letter_0").GetComponent<Image>().color;
-        origionalTextColor = GameObject.Find("Letter_0").GetComponentInChildren<Text>().color;
-
+	// Use this for initialization
+	void Start () {
         timeScript = Camera.main.GetComponent<timer>();
-        gm = Camera.main.GetComponent<GameMaster>();
-
-        Input.simulateMouseWithTouches = true;              //makes the touches as if they were mouse touches
-
         score.text = "0";
         points = 0;
+        Input.simulateMouseWithTouches = true;              //makes the touches as if they were mouse touches
         charInput.text = "";                                //sets the input text to nothing
+        gm = Camera.main.GetComponent<GameMaster>();
         dictionaryLines = Regex.Split(dictionary.text, "\n");
     }
 	
@@ -59,10 +46,6 @@ public class TouchListener : MonoBehaviour {
             curInteractableButtons = resetInteractions; //reset the ineractions so when we touch again we can touch any buttons
             curButton = -1;                             //resets the button number interactions to -1 so we reset the touch listener
             bool isWord;
-            for(int i = 0; i < curUsedButtons.Count; i++)
-            {
-                setColor_Origional(curUsedButtons[i]);
-            }
             if (charInput.text.Length > 0)
             {
                 isWord = check_Dictionary(charInput.text); //this checks to see if the letters are a word
@@ -133,7 +116,6 @@ public class TouchListener : MonoBehaviour {
                     {
                         //we hit a button that we can touch
                         curUsedButtons.Add(buttonInspector.number);                     //adds the pressed button to a list of used buttons
-                        setColor_Highlighted(buttonInspector.number);
                         charInput.text += buttonInspector.curChar;                      //add the text in the text box to our string
                         curButton = buttonInspector.number;                             //set our curButton number to the new one
                         curInteractableButtons = buttonInspector.interactableButtons;   //change what buttons we can now interact with
@@ -147,7 +129,6 @@ public class TouchListener : MonoBehaviour {
 
             //this is the first button we have hit so we have to set everything
             curUsedButtons.Add(buttonInspector.number);
-            setColor_Highlighted(buttonInspector.number);
             curInteractableButtons = buttonInspector.interactableButtons;
             charInput.text = buttonInspector.curChar;
             curButton = buttonInspector.number;
@@ -157,8 +138,6 @@ public class TouchListener : MonoBehaviour {
     
     /// <summary>
     /// fetches the buttonControls script from the right button
-    /// <param name="n">The number of the button being passed ina</param>
-    /// <returns>The button controls script from the specified button</returns>
     /// </summary>
     public ButtonControls fetchControls(int n)
     {
@@ -169,8 +148,6 @@ public class TouchListener : MonoBehaviour {
     
     /// <summary>
     /// checks the dictionary for the words being passed in
-    /// <param name="word">Takes in a word</param>
-    /// <returns>Returns <c>true</c> if the word is in the dictionary and <c>false</c> otherwise</returns>
     /// </summary>
     private bool check_Dictionary(string word)
     {
@@ -233,24 +210,6 @@ public class TouchListener : MonoBehaviour {
             score += (i + 1) * 10;
         }
         return score;
-    }
-
-    private void setColor_Highlighted(int n)
-    {
-        Image btn = GameObject.Find("Letter_" + n).GetComponent<Image>();
-        btn.color = highlightedButtonColor;
-
-        Text txt = GameObject.Find("Letter_" + n).GetComponentInChildren<Text>();
-        txt.color = highlightedTextColor;
-    }
-
-    private void setColor_Origional(int n)
-    {
-        Image btn = GameObject.Find("Letter_" + n).GetComponent<Image>();
-        btn.color = origionalButtonColor;
-
-        Text txt = GameObject.Find("Letter_" + n).GetComponentInChildren<Text>();
-        txt.color = origionalTextColor;
     }
 }
 

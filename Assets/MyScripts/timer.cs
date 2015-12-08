@@ -87,7 +87,7 @@ public class timer: MonoBehaviour {
         tc.score.text = tc.points.ToString();
     }
 
-    public void setScore()
+    private void setScore()
     {
         //future reference to set the high score
         if (PlayerPrefs.GetInt(mode + "_" + gameModeTime) < tc.points)
