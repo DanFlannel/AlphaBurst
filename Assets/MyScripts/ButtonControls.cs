@@ -12,11 +12,13 @@ public class ButtonControls : MonoBehaviour {
     public int randomNum;
 	//me 
 	public string st = "abcdefghijklmnopqrstuvwxyz";
+    private bool start = true;
 
 	// Use this for initialization
 	void Start () {
         //curChar = this.GetComponentInChildren<Text>().text;
         //me 
+        start = true;
         randomNum = Random.Range(0, 103);
         //curChar = st[Random.Range(0, st.Length)].ToString();
         curChar = letterFrequency(randomNum).ToString();
@@ -34,8 +36,47 @@ public class ButtonControls : MonoBehaviour {
         gm.hasButtonClicked[number] = true;
     }
 
+    /// <summary>
+    /// Called at the start and when we are changing letters because we made a word
+    /// </summary>
+    /// <param name="newChar">a new character that will replace the old one</param>
     public void changeCharacter(string newChar)
     {
+        int type2;
+        if (!start)
+        {
+            int type = checkCharacter(curChar);
+            adjustLetterValues(type, false);
+        }
+        
+        
+        if(gm.vowles < gm.vowelMin)     //not enough vowels
+        {
+            //we need this to be a vowel
+            while(checkCharacter(newChar) != 0)
+            {
+                int rnd = Random.Range(0, 103);
+                newChar = letterFrequency(rnd).ToString();
+            }
+            
+
+        }
+        else if(gm.vowles >= gm.vowelMax)  //too many vowels
+        {
+            while (checkCharacter(newChar) != 1)
+            {
+                int rnd = Random.Range(0, 103);
+                newChar = letterFrequency(rnd).ToString();
+            }
+        }
+        else { 
+            //just right
+        }
+
+        start = false;
+        type2 = checkCharacter(newChar);
+        adjustLetterValues(type2, true);
+
         curChar = newChar;
 		Text currentText = this.GetComponentInChildren<Text>();
 		currentText.text = newChar;
@@ -150,6 +191,58 @@ public class ButtonControls : MonoBehaviour {
 
 
         return c;
+    }
+
+    private int checkCharacter(string letter)
+    {
+        char curChar;
+        char[] temp = letter.ToCharArray();
+        curChar = temp[0];
+
+        if (curChar == 'a' || curChar == 'e' || curChar == 'i' || curChar == 'o' || curChar == 'u')  //if the character is a vowel
+        {
+            Debug.Log("Vowel");
+            return 0;
+        }
+        else if (System.Char.IsLetter(curChar))  //if the character is a constanat
+        {
+            Debug.Log("Non Vowel");
+            return 1;
+        }
+        else
+        {
+            Debug.Log("Number or non character letter");
+            return 2;   //if the character is a number
+        }
+    }
+
+    private void adjustLetterValues(int n, bool add)
+    {
+        switch (n)
+        {
+            case 0:     //vowel
+                if (add)
+                {
+                    gm.vowles++;
+                }
+                else
+                {
+                    gm.vowles--;
+                }
+                break;
+            case 1:     //non vowel
+                if (add)
+                {
+                    gm.constanants++;
+                }
+                else
+                {
+                    gm.constanants--;
+                }
+                break;
+            case 2:     //number
+                break;
+        }
     }
 
 }
