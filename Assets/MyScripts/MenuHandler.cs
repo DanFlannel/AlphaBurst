@@ -1,8 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
+using UnityEngine.SocialPlatforms;
 
 public class MenuHandler : MonoBehaviour {
+
+    private bool signedIn = false;
+    private bool attemptedToSignIn = false;
+
+    public Text signIn;
 
     public Button gameMode1;
     public Button gameMode2;
@@ -14,6 +22,38 @@ public class MenuHandler : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        attemptedToSignIn = PlayerPrefs.GetInt("AttemptedToSignIn", 0) == 1;
+        signedIn = PlayerPrefs.GetInt("leaderBoard", 0) == 1;
+        bool idc = true;
+        if (idc)
+        {
+            
+
+            PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
+                .Build();
+            PlayGamesPlatform.InitializeInstance(config);
+            PlayGamesPlatform.DebugLogEnabled = true;
+            PlayGamesPlatform.Activate();
+            signIn.text = "";
+            PlayerPrefs.SetInt("leaderBoard", 0);
+            PlayerPrefs.SetInt("AttemptedToSignIn", 1);
+            Social.localUser.Authenticate((bool sucess) =>
+            {
+                if (sucess)
+                {
+                    //signIn.text = "Signed In";
+                    Debug.Log("You've sucessfully logged in!");
+                    PlayerPrefs.SetInt("leaderBoard", 1);
+                }
+                else
+                {
+                    //signIn.text = "Failed";
+                    Debug.Log("Failed to log in");
+                    PlayerPrefs.SetInt("leaderBoard", 0);
+                }
+            });
+
+        }
         three_by_three();
 	}
 	
@@ -93,5 +133,10 @@ public class MenuHandler : MonoBehaviour {
                 break;
         }
         loadLevel_with_time();
+    }
+
+    public void show_leaderBoard()
+    {
+        Social.ShowLeaderboardUI();
     }
 }

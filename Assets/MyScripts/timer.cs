@@ -92,7 +92,97 @@ public class timer: MonoBehaviour {
         //future reference to set the high score
         if (PlayerPrefs.GetInt(mode + "_" + gameModeTime) < tc.points)
         {
+            if (PlayerPrefs.GetInt("leaderBoard") == 1)
+            {
+                setLeaderBoard();
+            }
             PlayerPrefs.SetInt(mode + "_" + gameModeTime, tc.points);
+        }
+    }
+
+    private void setLeaderBoard()
+    {
+        string board = mode + "_" + gameModeTime;
+        switch (board)
+        {
+            case "3x3_30":
+                Social.ReportScore(tc.points, gpg_constants.leaderboard_3x3_30_seconds, (bool sucess) =>
+                {
+                    if (sucess)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                });
+                break;
+            case "3x3_60":
+                Social.ReportScore(tc.points, gpg_constants.leaderboard_3x3_1_minute, (bool sucess) =>
+                {
+                    if (sucess)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                });
+                break;
+            case "3x3_120":
+                Social.ReportScore(tc.points, gpg_constants.leaderboard_3x3_2_minutes, (bool sucess) =>
+                {
+                    if (sucess)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                });
+                break;
+            case "4x4_60":
+                Social.ReportScore(tc.points, gpg_constants.leaderboard_4x4_1_minute, (bool sucess) =>
+                {
+                    if (sucess)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                });
+                break;
+            case "4x4_120":
+                Social.ReportScore(tc.points, gpg_constants.leaderboard_4x4_2_minutes, (bool sucess) =>
+                {
+                    if (sucess)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                });
+                break;
+            case "4x4_180":
+                Social.ReportScore(tc.points, gpg_constants.leaderboard_4x4_3_minutes, (bool sucess) =>
+                {
+                    if (sucess)
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                });
+                break;
         }
     }
 

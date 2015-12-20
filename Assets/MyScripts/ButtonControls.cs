@@ -201,17 +201,14 @@ public class ButtonControls : MonoBehaviour {
 
         if (curChar == 'a' || curChar == 'e' || curChar == 'i' || curChar == 'o' || curChar == 'u')  //if the character is a vowel
         {
-            Debug.Log("Vowel");
             return 0;
         }
         else if (System.Char.IsLetter(curChar))  //if the character is a constanat
         {
-            Debug.Log("Non Vowel");
             return 1;
         }
         else
         {
-            Debug.Log("Number or non character letter");
             return 2;   //if the character is a number
         }
     }
