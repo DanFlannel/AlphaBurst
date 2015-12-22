@@ -193,7 +193,7 @@ namespace GooglePlayGames.Native
                     else
                     {
                         var converted = match.AsTurnBasedMatch(mNativeClient.GetUserId());
-                        Logger.d("Passing converted match to user callback:" + converted);
+                        OurUtils.Logger.d("Passing converted match to user callback:" + converted);
                         userCallback(UIStatus.Valid, converted);
                     }
                 }
@@ -214,7 +214,7 @@ namespace GooglePlayGames.Native
                         else
                         {
                             var converted = match.AsTurnBasedMatch(mNativeClient.GetUserId());
-                            Logger.d("Passing converted match to user callback:" + converted);
+                            OurUtils.Logger.d("Passing converted match to user callback:" + converted);
                             callback(true, converted);
                         }
                     }
@@ -229,7 +229,7 @@ namespace GooglePlayGames.Native
                 {
                     if (invitation == null)
                     {
-                        Logger.e("Could not find invitation with id " + invitationId);
+                        OurUtils.Logger.e("Could not find invitation with id " + invitationId);
                         callback(false, null);
                         return;
                     }
@@ -292,7 +292,7 @@ namespace GooglePlayGames.Native
             // Ignore REMOVED events - this plugin has no use for them.
             if (eventType == Types.MultiplayerEvent.REMOVED)
             {
-                Logger.d("Ignoring REMOVE event for match " + matchId);
+                OurUtils.Logger.d("Ignoring REMOVE event for match " + matchId);
                 return;
             }
 
@@ -318,7 +318,7 @@ namespace GooglePlayGames.Native
         public void TakeTurn(TurnBasedMatch match, byte[] data, string pendingParticipantId,
                          Action<bool> callback)
         {
-            Logger.describe(data);
+            OurUtils.Logger.describe(data);
             callback = Callbacks.AsOnGameThreadCallback(callback);
             // Find the indicated match, take the turn if the match is:
             // a) Still present
@@ -338,7 +338,7 @@ namespace GooglePlayGames.Native
                             }
                             else
                             {
-                                Logger.d("Taking turn failed: " + result.ResponseStatus());
+                                OurUtils.Logger.d("Taking turn failed: " + result.ResponseStatus());
                                 callback(false);
                             }
                         });
@@ -354,14 +354,14 @@ namespace GooglePlayGames.Native
                     {
                         if (foundMatch == null)
                         {
-                            Logger.e(string.Format("Could not find match {0}", match.MatchId));
+                            OurUtils.Logger.e(string.Format("Could not find match {0}", match.MatchId));
                             onFailure(false);
                             return;
                         }
 
                         if (foundMatch.Version() != match.Version)
                         {
-                            Logger.e(string.Format("Attempted to update a stale version of the " +
+                            OurUtils.Logger.e(string.Format("Attempted to update a stale version of the " +
                                     "match. Expected version was {0} but current version is {1}.",
                                     match.Version, foundMatch.Version()));
                             onFailure(false);
@@ -394,7 +394,7 @@ namespace GooglePlayGames.Native
                     {
                         if (participant == null)
                         {
-                            Logger.e(string.Format("Located match {0} but desired participant with ID " +
+                            OurUtils.Logger.e(string.Format("Located match {0} but desired participant with ID " +
                                     "{1} could not be found", match.MatchId, participantId));
                             onFailure(false);
                             return;
@@ -433,7 +433,7 @@ namespace GooglePlayGames.Native
 
                             if (matchResult != existingResults || placing != existingPlacing)
                             {
-                                Logger.e(string.Format("Attempted to override existing results for " +
+                                OurUtils.Logger.e(string.Format("Attempted to override existing results for " +
                                         "participant {0}: Placing {1}, Result {2}",
                                         participantId, existingPlacing, existingResults));
                                 callback(false);
@@ -467,7 +467,7 @@ namespace GooglePlayGames.Native
                 case MatchOutcome.ParticipantResult.Win:
                     return Types.MatchResult.WIN;
                 default:
-                    Logger.e("Received unknown ParticipantResult " + result);
+                    OurUtils.Logger.e("Received unknown ParticipantResult " + result);
                     return Types.MatchResult.NONE;
             }
         }

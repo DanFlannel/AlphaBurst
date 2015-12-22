@@ -124,7 +124,7 @@ namespace GooglePlayGames.Native.PInvoke
             // fixed.
             //if (!HasRematchId())
             //{
-            //    Logger.d("Returning NUll for rematch id since it does not have one");
+            //    OurUtils.Logger.d("Returning NUll for rematch id since it does not have one");
             //    return null;
             //}
 
@@ -136,7 +136,7 @@ namespace GooglePlayGames.Native.PInvoke
         {
             if (!C.TurnBasedMatch_HasData(SelfPtr()))
             {
-                Logger.d("Match has no data.");
+                OurUtils.Logger.d("Match has no data.");
                 return null;
             }
 

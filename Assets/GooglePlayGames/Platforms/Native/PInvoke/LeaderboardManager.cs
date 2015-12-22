@@ -48,7 +48,7 @@ namespace GooglePlayGames.Native.PInvoke
         internal void SubmitScore(string leaderboardId, long score, string metadata)
         {
             Misc.CheckNotNull(leaderboardId, "leaderboardId");
-            Logger.d("Native Submitting score: " + score +
+            OurUtils.Logger.d("Native Submitting score: " + score +
                 " for lb " + leaderboardId + " with metadata: " + metadata);
             C.LeaderboardManager_SubmitScore(mServices.AsHandle(), leaderboardId,
                 (ulong)score, metadata ?? "");
@@ -146,7 +146,7 @@ namespace GooglePlayGames.Native.PInvoke
             if (response.GetStatus() != Status.ResponseStatus.VALID &&
                 response.GetStatus() != Status.ResponseStatus.VALID_BUT_STALE)
             {
-                Logger.w("Error returned from fetch: " + response.GetStatus());
+                OurUtils.Logger.w("Error returned from fetch: " + response.GetStatus());
                 callback(data);
                 return;
             }
@@ -183,7 +183,7 @@ namespace GooglePlayGames.Native.PInvoke
             if (response.GetStatus() != Status.ResponseStatus.VALID &&
                 response.GetStatus() != Status.ResponseStatus.VALID_BUT_STALE)
             {
-                Logger.w("Error returned from fetchScoreSummary: " + response);
+                OurUtils.Logger.w("Error returned from fetchScoreSummary: " + response);
                 data.Status = (ResponseStatus)response.GetStatus();
                 callback(data);
                 return;

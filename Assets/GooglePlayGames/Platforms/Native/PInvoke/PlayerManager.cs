@@ -116,7 +116,7 @@ namespace GooglePlayGames.Native.PInvoke
             if (rsp.Status() == Status.ResponseStatus.VALID ||
                 rsp.Status() == Status.ResponseStatus.VALID_BUT_STALE)
             {
-                Logger.d("Got "  + rsp.Length().ToUInt64() + " players");
+                OurUtils.Logger.d("Got "  + rsp.Length().ToUInt64() + " players");
                 foreach (NativePlayer p in rsp)
                 {
                    players.Add(p.AsPlayer());

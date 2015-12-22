@@ -122,8 +122,6 @@ public class TouchListener : MonoBehaviour {
             }
             if (!isUsed)    //if the buttons has not been used before for this word
             {
-                //TODO change color in here!
-
                 //check to make sure that the only buttons we interact with are ones that are linked
                 for (int j = 0; j < curInteractableButtons.Count; j++)
                 {

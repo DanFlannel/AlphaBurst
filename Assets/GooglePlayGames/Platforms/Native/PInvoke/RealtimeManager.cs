@@ -126,7 +126,7 @@ namespace GooglePlayGames.Native.PInvoke
         [AOT.MonoPInvokeCallback(typeof(C.LeaveRoomCallback))]
         internal static void InternalLeaveRoomCallback(Status.ResponseStatus response, IntPtr data)
         {
-            Logger.d("Entering internal callback for InternalLeaveRoomCallback");
+            OurUtils.Logger.d("Entering internal callback for InternalLeaveRoomCallback");
 
             Action<Status.ResponseStatus> callback =
                 Callbacks.IntPtrToTempCallback<Action<Status.ResponseStatus>>(data);
@@ -142,7 +142,7 @@ namespace GooglePlayGames.Native.PInvoke
             }
             catch (Exception e)
             {
-                Logger.e("Error encountered executing InternalLeaveRoomCallback. " +
+                OurUtils.Logger.e("Error encountered executing InternalLeaveRoomCallback. " +
                     "Smothering to avoid passing exception into Native: " + e);
             }
         }
@@ -182,7 +182,7 @@ namespace GooglePlayGames.Native.PInvoke
         internal static void InternalSendReliableMessageCallback(Status.MultiplayerStatus response,
                                                              IntPtr data)
         {
-            Logger.d("Entering internal callback for InternalSendReliableMessageCallback " + response);
+            OurUtils.Logger.d("Entering internal callback for InternalSendReliableMessageCallback " + response);
 
             Action<Status.MultiplayerStatus> callback =
                 Callbacks.IntPtrToTempCallback<Action<Status.MultiplayerStatus>>(data);
@@ -198,7 +198,7 @@ namespace GooglePlayGames.Native.PInvoke
             }
             catch (Exception e)
             {
-                Logger.e("Error encountered executing InternalSendReliableMessageCallback. " +
+                OurUtils.Logger.e("Error encountered executing InternalSendReliableMessageCallback. " +
                     "Smothering to avoid passing exception into Native: " + e);
             }
         }

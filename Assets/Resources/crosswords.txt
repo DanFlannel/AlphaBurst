@@ -37129,8 +37129,8 @@ floe
 floes
 flog
 flogged
-flogger
-floggers
+fOurUtils.Logger
+fOurUtils.Loggers
 flogging
 floggings
 flogs
@@ -56748,10 +56748,10 @@ loge
 loges
 loggats
 logged
-logger
-loggerhead
-loggerheads
-loggers
+OurUtils.Logger
+OurUtils.Loggerhead
+OurUtils.Loggerheads
+OurUtils.Loggers
 loggets
 loggia
 loggias
@@ -92287,8 +92287,8 @@ slog
 slogan
 slogans
 slogged
-slogger
-sloggers
+sOurUtils.Logger
+sOurUtils.Loggers
 slogging
 slogs
 sloid

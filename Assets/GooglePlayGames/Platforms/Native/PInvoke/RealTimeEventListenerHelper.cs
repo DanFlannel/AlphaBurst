@@ -127,7 +127,7 @@ namespace GooglePlayGames.Native.PInvoke
         internal static void PerformRoomAndParticipantCallback(string callbackName,
                                                            IntPtr room, IntPtr participant, IntPtr data)
         {
-            Logger.d("Entering " + callbackName);
+            OurUtils.Logger.d("Entering " + callbackName);
 
             try
             {
@@ -146,7 +146,7 @@ namespace GooglePlayGames.Native.PInvoke
             }
             catch (Exception e)
             {
-                Logger.e("Error encountered executing " + callbackName + ". " +
+                OurUtils.Logger.e("Error encountered executing " + callbackName + ". " +
                     "Smothering to avoid passing exception into Native: " + e);
             }
         }
@@ -156,7 +156,7 @@ namespace GooglePlayGames.Native.PInvoke
         {
             IntPtr onData = Callbacks.ToIntPtr(callback);
 
-            Logger.d("OnData Callback has addr: " + onData.ToInt64());
+            OurUtils.Logger.d("OnData Callback has addr: " + onData.ToInt64());
 
             C.RealTimeEventListenerHelper_SetOnDataReceivedCallback(SelfPtr(),
                 InternalOnDataReceived, onData);
@@ -168,7 +168,7 @@ namespace GooglePlayGames.Native.PInvoke
             IntPtr room, IntPtr participant, IntPtr data, UIntPtr dataLength, bool isReliable,
             IntPtr userData)
         {
-            Logger.d("Entering InternalOnDataReceived: " + userData.ToInt64());
+            OurUtils.Logger.d("Entering InternalOnDataReceived: " + userData.ToInt64());
 
             var callback = Callbacks.IntPtrToPermanentCallback
             <Action<NativeRealTimeRoom, MultiplayerParticipant, byte[], bool>>(userData);
@@ -196,7 +196,7 @@ namespace GooglePlayGames.Native.PInvoke
                     }
                     catch (Exception e)
                     {
-                        Logger.e("Error encountered executing InternalOnDataReceived. " +
+                        OurUtils.Logger.e("Error encountered executing InternalOnDataReceived. " +
                             "Smothering to avoid passing exception into Native: " + e);
                     }
                 }

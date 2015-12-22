@@ -67,7 +67,7 @@ namespace GooglePlayGames.Native
                 var newSession = new RoomSession(mRealtimeManager, listener);
                 if (mCurrentSession.IsActive())
                 {
-                    Logger.e("Received attempt to create a new room without cleaning up the old one.");
+                    OurUtils.Logger.e("Received attempt to create a new room without cleaning up the old one.");
                     newSession.LeaveRoom();
                     return;
                 }
@@ -75,7 +75,7 @@ namespace GooglePlayGames.Native
                 mCurrentSession = newSession;
 
                 //Quickgames start when there is the min number of players
-                Logger.d("QuickGame: Setting MinPlayersToStart = " + minOpponents);
+                OurUtils.Logger.d("QuickGame: Setting MinPlayersToStart = " + minOpponents);
                 mCurrentSession.MinPlayersToStart = minOpponents;
 
                 // We're holding the session lock, so no other threads could have torn down the session
@@ -120,7 +120,7 @@ namespace GooglePlayGames.Native
         {
             if (paused)
             {
-                Logger.d("Application is pausing, which disconnects the RTMP " +
+                OurUtils.Logger.d("Application is pausing, which disconnects the RTMP " +
                     " client.  Leaving room.");
                 LeaveRoom();
             }
@@ -135,7 +135,7 @@ namespace GooglePlayGames.Native
 
                 if (mCurrentSession.IsActive())
                 {
-                    Logger.e("Received attempt to create a new room without cleaning up the old one.");
+                    OurUtils.Logger.e("Received attempt to create a new room without cleaning up the old one.");
                     newRoom.LeaveRoom();
                     return;
                 }
@@ -151,7 +151,7 @@ namespace GooglePlayGames.Native
                         mCurrentSession.ShowingUI = false;
                         if (response.Status() != Status.UIStatus.VALID)
                         {
-                            Logger.d("User did not complete invitation screen.");
+                            OurUtils.Logger.d("User did not complete invitation screen.");
                             newRoom.LeaveRoom();
                             return;
                         }
@@ -197,7 +197,7 @@ namespace GooglePlayGames.Native
                 {
                     if (!response.RequestSucceeded())
                     {
-                        Logger.e("Couldn't load invitations.");
+                        OurUtils.Logger.e("Couldn't load invitations.");
                         callback(new Invitation[0]);
                         return;
                     }
@@ -221,7 +221,7 @@ namespace GooglePlayGames.Native
                 var newRoom = new RoomSession(mRealtimeManager, listener);
                 if (mCurrentSession.IsActive())
                 {
-                    Logger.e("Received attempt to accept invitation without cleaning up " +
+                    OurUtils.Logger.e("Received attempt to accept invitation without cleaning up " +
                         "active session.");
                     newRoom.LeaveRoom();
                     return;
@@ -237,7 +237,7 @@ namespace GooglePlayGames.Native
                         mCurrentSession.ShowingUI = false;
                         if (response.ResponseStatus() != Status.UIStatus.VALID)
                         {
-                            Logger.d("User did not complete invitation screen.");
+                            OurUtils.Logger.d("User did not complete invitation screen.");
                             newRoom.LeaveRoom();
                             return;
                         }
@@ -249,7 +249,7 @@ namespace GooglePlayGames.Native
 
                         using (var helper = HelperForSession(newRoom))
                         {
-                            Logger.d("About to accept invitation " + invitation.Id());
+                            OurUtils.Logger.d("About to accept invitation " + invitation.Id());
                             newRoom.StartRoomCreation(mNativeClient.GetUserId(),
                                 () => mRealtimeManager.AcceptInvitation(invitation, helper,
                                     acceptResponse =>
@@ -273,7 +273,7 @@ namespace GooglePlayGames.Native
                 var newRoom = new RoomSession(mRealtimeManager, listener);
                 if (mCurrentSession.IsActive())
                 {
-                    Logger.e("Received attempt to accept invitation without cleaning up " +
+                    OurUtils.Logger.e("Received attempt to accept invitation without cleaning up " +
                         "active session.");
                     newRoom.LeaveRoom();
                     return;
@@ -285,7 +285,7 @@ namespace GooglePlayGames.Native
                     {
                         if (!response.RequestSucceeded())
                         {
-                            Logger.e("Couldn't load invitations.");
+                            OurUtils.Logger.e("Couldn't load invitations.");
                             newRoom.LeaveRoom();
                             return;
                         }
@@ -299,7 +299,7 @@ namespace GooglePlayGames.Native
                                     mCurrentSession.MinPlayersToStart =
                                         invitation.AutomatchingSlots() +
                                         invitation.ParticipantCount();
-                                    Logger.d("Setting MinPlayersToStart with invitation to : " +
+                                    OurUtils.Logger.d("Setting MinPlayersToStart with invitation to : " +
                                         mCurrentSession.MinPlayersToStart);
                                     using (var helper = HelperForSession(newRoom))
                                     {
@@ -312,7 +312,7 @@ namespace GooglePlayGames.Native
                             }
                         }
 
-                        Logger.e("Room creation failed since we could not find invitation with ID "
+                        OurUtils.Logger.e("Room creation failed since we could not find invitation with ID "
                             + invitationId);
                         newRoom.LeaveRoom();
                     });
@@ -376,7 +376,7 @@ namespace GooglePlayGames.Native
                 {
                     if (!response.RequestSucceeded())
                     {
-                        Logger.e("Couldn't load invitations.");
+                        OurUtils.Logger.e("Couldn't load invitations.");
                         return;
                     }
 
@@ -531,7 +531,7 @@ namespace GooglePlayGames.Native
                 lock (mLifecycleLock)
                 {
                     mState = Misc.CheckNotNull(handler);
-                    Logger.d("Entering state: " + handler.GetType().Name);
+                    OurUtils.Logger.d("Entering state: " + handler.GetType().Name);
                     mState.OnStateEntered();
                 }
             }
@@ -547,7 +547,7 @@ namespace GooglePlayGames.Native
                 }
                 else
                 {
-                    Logger.d("Not leaving room since showing UI");
+                    OurUtils.Logger.d("Not leaving room since showing UI");
                 }
                     
             }
@@ -569,13 +569,13 @@ namespace GooglePlayGames.Native
                 {
                     if (!mStillPreRoomCreation)
                     {
-                        Logger.e("Room creation started more than once, this shouldn't happen!");
+                        OurUtils.Logger.e("Room creation started more than once, this shouldn't happen!");
                         return;
                     }
 
                     if (!mState.IsActive())
                     {
-                        Logger.w("Received an attempt to create a room after the session was already " +
+                        OurUtils.Logger.w("Received an attempt to create a room after the session was already " +
                             "torn down!");
                         return;
                     }
@@ -743,85 +743,85 @@ namespace GooglePlayGames.Native
         {
             internal virtual void HandleRoomResponse(RealtimeManager.RealTimeRoomResponse response)
             {
-                Logger.d(this.GetType().Name + ".HandleRoomResponse: Defaulting to no-op.");
+                OurUtils.Logger.d(this.GetType().Name + ".HandleRoomResponse: Defaulting to no-op.");
             }
 
             internal virtual bool IsActive()
             {
-                Logger.d(this.GetType().Name + ".IsNonPreemptable: Is preemptable by default.");
+                OurUtils.Logger.d(this.GetType().Name + ".IsNonPreemptable: Is preemptable by default.");
                 return true;
             }
 
             internal virtual void LeaveRoom()
             {
-                Logger.d(this.GetType().Name + ".LeaveRoom: Defaulting to no-op.");
+                OurUtils.Logger.d(this.GetType().Name + ".LeaveRoom: Defaulting to no-op.");
             }
 
             internal virtual void ShowWaitingRoomUI(uint minimumParticipantsBeforeStarting)
             {
-                Logger.d(this.GetType().Name + ".ShowWaitingRoomUI: Defaulting to no-op.");
+                OurUtils.Logger.d(this.GetType().Name + ".ShowWaitingRoomUI: Defaulting to no-op.");
             }
 
             internal virtual void OnStateEntered()
             {
-                Logger.d(this.GetType().Name + ".OnStateEntered: Defaulting to no-op.");
+                OurUtils.Logger.d(this.GetType().Name + ".OnStateEntered: Defaulting to no-op.");
             }
 
             internal virtual void OnRoomStatusChanged(NativeRealTimeRoom room)
             {
-                Logger.d(this.GetType().Name + ".OnRoomStatusChanged: Defaulting to no-op.");
+                OurUtils.Logger.d(this.GetType().Name + ".OnRoomStatusChanged: Defaulting to no-op.");
             }
 
             internal virtual void OnConnectedSetChanged(NativeRealTimeRoom room)
             {
-                Logger.d(this.GetType().Name + ".OnConnectedSetChanged: Defaulting to no-op.");
+                OurUtils.Logger.d(this.GetType().Name + ".OnConnectedSetChanged: Defaulting to no-op.");
             }
 
             internal virtual void OnParticipantStatusChanged(NativeRealTimeRoom room,
                                                          MultiplayerParticipant participant)
             {
-                Logger.d(this.GetType().Name + ".OnParticipantStatusChanged: Defaulting to no-op.");
+                OurUtils.Logger.d(this.GetType().Name + ".OnParticipantStatusChanged: Defaulting to no-op.");
             }
 
             internal virtual void OnDataReceived(NativeRealTimeRoom room, MultiplayerParticipant sender,
                                              byte[] data, bool isReliable)
             {
-                Logger.d(this.GetType().Name + ".OnDataReceived: Defaulting to no-op.");
+                OurUtils.Logger.d(this.GetType().Name + ".OnDataReceived: Defaulting to no-op.");
             }
 
             internal virtual void SendToSpecificRecipient(
                 string recipientId, byte[] data, int offset, int length, bool isReliable)
             {
-                Logger.d(this.GetType().Name + ".SendToSpecificRecipient: Defaulting to no-op.");
+                OurUtils.Logger.d(this.GetType().Name + ".SendToSpecificRecipient: Defaulting to no-op.");
             }
 
             internal virtual void SendToAll(byte[] data, int offset, int length, bool isReliable)
             {
-                Logger.d(this.GetType().Name + ".SendToApp: Defaulting to no-op.");
+                OurUtils.Logger.d(this.GetType().Name + ".SendToApp: Defaulting to no-op.");
             }
 
             internal virtual List<Participant> GetConnectedParticipants()
             {
-                Logger.d(this.GetType().Name + ".GetConnectedParticipants: Returning empty connected" +
+                OurUtils.Logger.d(this.GetType().Name + ".GetConnectedParticipants: Returning empty connected" +
                     " participants");
                 return new List<Participant>();
             }
 
             internal virtual Participant GetSelf()
             {
-                Logger.d(this.GetType().Name + ".GetSelf: Returning null self.");
+                OurUtils.Logger.d(this.GetType().Name + ".GetSelf: Returning null self.");
                 return null;
             }
 
             internal virtual Participant GetParticipant(string participantId)
             {
-                Logger.d(this.GetType().Name + ".GetSelf: Returning null participant.");
+                OurUtils.Logger.d(this.GetType().Name + ".GetSelf: Returning null participant.");
                 return null;
             }
 
             internal virtual bool IsRoomConnected()
             {
-                Logger.d(this.GetType().Name + ".IsRoomConnected: Returning room not connected.");
+                OurUtils.Logger.d(this.GetType().Name + ".IsRoomConnected: Returning room not connected.");
                 return false;
             }
         }
@@ -907,7 +907,7 @@ namespace GooglePlayGames.Native
             {
                 if (!mNativeParticipants.ContainsKey(recipientId))
                 {
-                    Logger.e("Attempted to send message to unknown participant " + recipientId);
+                    OurUtils.Logger.e("Attempted to send message to unknown participant " + recipientId);
                     return;
                 }
 
@@ -969,7 +969,7 @@ namespace GooglePlayGames.Native
 
             internal override void LeaveRoom()
             {
-                Logger.d("Session was torn down before room was created.");
+                OurUtils.Logger.d("Session was torn down before room was created.");
                 mContainingSession.OnGameThreadListener().RoomConnected(false);
                 mContainingSession.EnterState(new ShutdownState(mContainingSession));
             }
@@ -1013,7 +1013,7 @@ namespace GooglePlayGames.Native
 
             internal override void LeaveRoom()
             {
-                Logger.d("Received request to leave room during room creation, aborting creation.");
+                OurUtils.Logger.d("Received request to leave room during room creation, aborting creation.");
                 mContainingSession.EnterState(new AbortingRoomCreationState(mContainingSession));
             }
 
@@ -1086,7 +1086,7 @@ namespace GooglePlayGames.Native
                 // If the connected set hasn't actually changed, bail out.
                 if (mConnectedParticipants.Equals(newConnectedSet))
                 {
-                    Logger.w("Received connected set callback with unchanged connected set!");
+                    OurUtils.Logger.w("Received connected set callback with unchanged connected set!");
                     return;
                 }
 
@@ -1096,7 +1096,7 @@ namespace GooglePlayGames.Native
                 // creation.
                 if (room.Status() == Types.RealTimeRoomStatus.DELETED)
                 {
-                    Logger.e("Participants disconnected during room setup, failing. " +
+                    OurUtils.Logger.e("Participants disconnected during room setup, failing. " +
                         "Participants were: " + string.Join(",", noLongerConnected.ToArray()));
                     mSession.OnGameThreadListener().RoomConnected(false);
                     mSession.EnterState(new ShutdownState(mSession));
@@ -1105,13 +1105,13 @@ namespace GooglePlayGames.Native
 
                 var newlyConnected = newConnectedSet.Except(mConnectedParticipants);
 
-                Logger.d("New participants connected: " +
+                OurUtils.Logger.d("New participants connected: " +
                     string.Join(",", newlyConnected.ToArray()));
 
                 // If we're fully connected, transition to the Active state and signal the client.
                 if (room.Status() == Types.RealTimeRoomStatus.ACTIVE)
                 {
-                    Logger.d("Fully connected! Transitioning to active state.");
+                    OurUtils.Logger.d("Fully connected! Transitioning to active state.");
                     mSession.EnterState(new ActiveState(room, mSession));
                     mSession.OnGameThreadListener().RoomConnected(true);
                     return;
@@ -1155,9 +1155,9 @@ namespace GooglePlayGames.Native
                 mSession.Manager().ShowWaitingRoomUI(mRoom, minimumParticipantsBeforeStarting, response =>
                     {
                         mSession.ShowingUI = false;
-                        Logger.d("ShowWaitingRoomUI Response: " + response.ResponseStatus());
+                        OurUtils.Logger.d("ShowWaitingRoomUI Response: " + response.ResponseStatus());
                         if(response.ResponseStatus() == Status.UIStatus.VALID) {
-                            Logger.d("Connecting state ShowWaitingRoomUI: room pcount:" + response.Room().ParticipantCount() +
+                            OurUtils.Logger.d("Connecting state ShowWaitingRoomUI: room pcount:" + response.Room().ParticipantCount() +
                                 " status: " + response.Room().Status());
                             if (response.Room().Status() == Types.RealTimeRoomStatus.ACTIVE) {
                                 mSession.EnterState(new ActiveState(response.Room(), mSession));
@@ -1190,7 +1190,7 @@ namespace GooglePlayGames.Native
             {
                 if (GetSelf() == null)
                 {
-                    Logger.e("Room reached active state with unknown participant for the player");
+                    OurUtils.Logger.e("Room reached active state with unknown participant for the player");
                     LeaveRoom();
                 }
             }
@@ -1204,7 +1204,7 @@ namespace GooglePlayGames.Native
             {
                 if (!mParticipants.ContainsKey(participantId))
                 {
-                    Logger.e("Attempted to retrieve unknown participant " + participantId);
+                    OurUtils.Logger.e("Attempted to retrieve unknown participant " + participantId);
                     return null;
                 }
 
@@ -1260,13 +1260,13 @@ namespace GooglePlayGames.Native
                 .Select(p => p.AsParticipant())
                 .ToDictionary(p => p.ParticipantId);
 
-                Logger.d("Updated participant statuses: " +
+                OurUtils.Logger.d("Updated participant statuses: " +
                     string.Join(",", mParticipants.Values.Select(p => p.ToString()).ToArray()));
 
                 // Check whether the current player was disconnected from the room.
                 if (newlyLeft.Contains(GetSelf().ParticipantId))
                 {
-                    Logger.w("Player was disconnected from the multiplayer session.");
+                    OurUtils.Logger.w("Player was disconnected from the multiplayer session.");
                 }
 
                 // Strip out the participant ID of the local player - this player is not a "peer".

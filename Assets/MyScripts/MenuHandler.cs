@@ -7,6 +7,7 @@ using UnityEngine.SocialPlatforms;
 
 public class MenuHandler : MonoBehaviour {
 
+    #region Declared Variables
     private bool signedIn = false;
     private bool attemptedToSignIn = false;
 
@@ -19,18 +20,16 @@ public class MenuHandler : MonoBehaviour {
     public Text highScore_1;
     public Text highScore_2;
     public Text highScore_3;
+    #endregion
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         attemptedToSignIn = PlayerPrefs.GetInt("AttemptedToSignIn", 0) == 1;
         signedIn = PlayerPrefs.GetInt("leaderBoard", 0) == 1;
         bool idc = true;
         if (idc)
         {
-            
-
-            PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
-                .Build();
+            PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder().Build();
             PlayGamesPlatform.InitializeInstance(config);
             PlayGamesPlatform.DebugLogEnabled = true;
             PlayGamesPlatform.Activate();
