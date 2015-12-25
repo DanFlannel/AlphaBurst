@@ -9,7 +9,7 @@ public class MenuHandler : MonoBehaviour {
 
     #region Declared Variables
     private bool signedIn = false;
-    private bool attemptedToSignIn = false;
+    private bool firstSignIn = false;
 
     public Text signIn;
 
@@ -24,37 +24,47 @@ public class MenuHandler : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        attemptedToSignIn = PlayerPrefs.GetInt("AttemptedToSignIn", 0) == 1;
-        signedIn = PlayerPrefs.GetInt("leaderBoard", 0) == 1;
-        bool idc = true;
-        if (idc)
+        firstSignIn = PlayerPrefs.GetInt("FirstApplicationLoad", 0) == 1;
+        bool sucess = PlayerPrefs.GetInt("leaderBoard") == 1;
+        if (!firstSignIn)
         {
-            PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder().Build();
-            PlayGamesPlatform.InitializeInstance(config);
-            PlayGamesPlatform.DebugLogEnabled = true;
-            PlayGamesPlatform.Activate();
-            signIn.text = "";
-            PlayerPrefs.SetInt("leaderBoard", 0);
-            PlayerPrefs.SetInt("AttemptedToSignIn", 1);
-            Social.localUser.Authenticate((bool sucess) =>
-            {
-                if (sucess)
-                {
-                    //signIn.text = "Signed In";
-                    Debug.Log("You've sucessfully logged in!");
-                    PlayerPrefs.SetInt("leaderBoard", 1);
-                }
-                else
-                {
-                    //signIn.text = "Failed";
-                    Debug.Log("Failed to log in");
-                    PlayerPrefs.SetInt("leaderBoard", 0);
-                }
-            });
-
+            signInMethod();
+            PlayerPrefs.SetInt("FirstApplicationLoad", 1);
+        } else if (firstSignIn == false && sucess)
+        {
+            signInMethod();
+        }
+        else
+        {
+            //we dont sign in because weve already tried that and the first time it didnt work
         }
         three_by_three();
 	}
+
+    public void signInMethod()
+    {
+        PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder().Build();
+        PlayGamesPlatform.InitializeInstance(config);
+        PlayGamesPlatform.DebugLogEnabled = true;
+        PlayGamesPlatform.Activate();
+        signIn.text = "";
+        PlayerPrefs.SetInt("AttemptedToSignIn", 1);
+        Social.localUser.Authenticate((bool sucess) =>
+        {
+            if (sucess)
+            {
+                //signIn.text = "Signed In";
+                Debug.Log("You've sucessfully logged in!");
+                PlayerPrefs.SetInt("leaderBoard", 1);
+            }
+            else
+            {
+                //signIn.text = "Failed";
+                Debug.Log("Failed to log in");
+                PlayerPrefs.SetInt("leaderBoard", 0);
+            }
+        });
+    }
 	
     public void three_by_three()
     {
