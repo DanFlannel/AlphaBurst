@@ -29,13 +29,16 @@ public class TouchListener : MonoBehaviour {
     
     public Color highlightedTextColor;
     public Color highlightedButtonColor;
+    public Sprite highlightedButtonSprite;
 
     private Color origionalButtonColor;
     private Color origionalTextColor;
+    private Sprite origionalButtonSprite;
 
 
     // Use this for initialization
     void Start () {
+        origionalButtonSprite = GameObject.Find("Letter_0").GetComponent<Image>().sprite;
         origionalButtonColor = GameObject.Find("Letter_0").GetComponent<Image>().color;
         origionalTextColor = GameObject.Find("Letter_0").GetComponentInChildren<Text>().color;
 
@@ -236,6 +239,7 @@ public class TouchListener : MonoBehaviour {
     private void setColor_Highlighted(int n)
     {
         Image btn = GameObject.Find("Letter_" + n).GetComponent<Image>();
+        btn.sprite = highlightedButtonSprite;
         btn.color = highlightedButtonColor;
 
         Text txt = GameObject.Find("Letter_" + n).GetComponentInChildren<Text>();
@@ -245,6 +249,7 @@ public class TouchListener : MonoBehaviour {
     private void setColor_Origional(int n)
     {
         Image btn = GameObject.Find("Letter_" + n).GetComponent<Image>();
+        btn.sprite = origionalButtonSprite;
         btn.color = origionalButtonColor;
 
         Text txt = GameObject.Find("Letter_" + n).GetComponentInChildren<Text>();
