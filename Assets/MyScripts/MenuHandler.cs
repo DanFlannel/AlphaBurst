@@ -8,11 +8,13 @@ using UnityEngine.SocialPlatforms;
 public class MenuHandler : MonoBehaviour {
 
     #region Declared Variables
-    private bool signedIn = false;
-    private bool firstSignIn = false;
+    private bool signedIn;
+    private bool firstSignIn;
+    private bool usingLeaderboards;
+    private bool signInSucess;
     public GameObject leaderBoardButton;
 
-    public Text signIn;
+    public Text DebugText;
 
     public Button gameMode1;
     public Button gameMode2;
@@ -25,28 +27,59 @@ public class MenuHandler : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        bool sucess = PlayerPrefs.GetInt("leaderBoard") == 1;
-        if (!sucess)
+        DebugText.text = "called start \n";
+        Init();
+        leaderBoardToggle();
+        DebugText.text += "called init \n";
+        signInCheck();
+        DebugText.text += "checkd for sign in \n";
+        leaderBoardToggle();
+        DebugText.text += "rechecked leaderboard toggle\n";
+
+
+        three_by_three();
+        DebugText.text += "called three by three";
+    }
+
+    private void leaderBoardToggle()
+    {
+        if (!usingLeaderboards)
         {
             leaderBoardButton.GetComponent<Button>().interactable = false;
         }
-        
-        firstSignIn = PlayerPrefs.GetInt("FirstApplicationLoad", 0) == 1;
+        else
+        {
+            leaderBoardButton.GetComponent<Button>().interactable = true;
+        }
+    }
 
-        if (!firstSignIn)
+    private void Init()
+    {
+        usingLeaderboards = PlayerPrefs.GetInt("leaderBoard") == 1;
+        firstSignIn = PlayerPrefs.GetInt("FirstApplicationLoad") == 0;
+        signInSucess = PlayerPrefs.GetInt("SignInSucess") == 1;
+    }
+
+    private void signInCheck()
+    {
+        DebugText.text += "first sign in: " + firstSignIn + " \n";
+        DebugText.text += "sucessful signin before: " +  signInSucess + " \n";
+
+        if (firstSignIn)    // if its the first time loading the app we will attempt to sign them in
         {
             signInMethod();
-            PlayerPrefs.SetInt("FirstApplicationLoad", 1);
-        } else if (firstSignIn == false && sucess)
+            PlayerPrefs.SetInt("FirstApplicationLoad", 1);  //this makes sure that we do not call this method again
+        }
+
+        else if (!firstSignIn && signInSucess)    //if this is no the first sign in but the first sign in was sucessful we will sign them in again
         {
             signInMethod();
         }
-        else
+        else if (!firstSignIn & !signInSucess)       //if this is not the first sign in and their first sign in wasn't scuessful we will not try again
         {
             //we dont sign in because weve already tried that and the first time it didnt work
         }
-        three_by_three();
-	}
+    }
 
     public void signInMethod()
     {
@@ -54,7 +87,7 @@ public class MenuHandler : MonoBehaviour {
         PlayGamesPlatform.InitializeInstance(config);
         PlayGamesPlatform.DebugLogEnabled = true;
         PlayGamesPlatform.Activate();
-        signIn.text = "";
+        DebugText.text = "";
         PlayerPrefs.SetInt("AttemptedToSignIn", 1);
         Social.localUser.Authenticate((bool sucess) =>
         {
@@ -62,13 +95,15 @@ public class MenuHandler : MonoBehaviour {
             {
                 //signIn.text = "Signed In";
                 leaderBoardButton.GetComponent<Button>().interactable = true;
-                Debug.Log("You've sucessfully logged in!");
+                DebugText.text += "You've sucessfully logged in! + \n";
                 PlayerPrefs.SetInt("leaderBoard", 1);
+                PlayerPrefs.SetInt("SignInSucess", 1);
             }
             else
             {
                 //signIn.text = "Failed";
-                Debug.Log("Failed to log in");
+                leaderBoardButton.GetComponent<Button>().interactable = false;
+                DebugText.text += "Failed to log in + \n";
                 PlayerPrefs.SetInt("leaderBoard", 0);
             }
         });
