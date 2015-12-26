@@ -10,6 +10,7 @@ public class MenuHandler : MonoBehaviour {
     #region Declared Variables
     private bool signedIn = false;
     private bool firstSignIn = false;
+    public GameObject leaderBoardButton;
 
     public Text signIn;
 
@@ -24,6 +25,7 @@ public class MenuHandler : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        leaderBoardButton.GetComponent<Button>().interactable = false;
         firstSignIn = PlayerPrefs.GetInt("FirstApplicationLoad", 0) == 1;
         bool sucess = PlayerPrefs.GetInt("leaderBoard") == 1;
         if (!firstSignIn)
@@ -54,6 +56,7 @@ public class MenuHandler : MonoBehaviour {
             if (sucess)
             {
                 //signIn.text = "Signed In";
+                leaderBoardButton.GetComponent<Button>().interactable = true;
                 Debug.Log("You've sucessfully logged in!");
                 PlayerPrefs.SetInt("leaderBoard", 1);
             }
