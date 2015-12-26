@@ -25,9 +25,14 @@ public class MenuHandler : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        leaderBoardButton.GetComponent<Button>().interactable = false;
-        firstSignIn = PlayerPrefs.GetInt("FirstApplicationLoad", 0) == 1;
         bool sucess = PlayerPrefs.GetInt("leaderBoard") == 1;
+        if (!sucess)
+        {
+            leaderBoardButton.GetComponent<Button>().interactable = false;
+        }
+        
+        firstSignIn = PlayerPrefs.GetInt("FirstApplicationLoad", 0) == 1;
+
         if (!firstSignIn)
         {
             signInMethod();
