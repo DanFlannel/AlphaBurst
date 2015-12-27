@@ -27,19 +27,21 @@ public class MenuHandler : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        DebugText.text = "called start \n";
+        Debug.logger.Log("called start");
         Init();
         leaderBoardToggle();
-        DebugText.text += "called init \n";
-        signInCheck();
-        DebugText.text += "checkd for sign in \n";
+        Debug.logger.Log("called init");
+        if (!PlayGamesPlatform.Instance.IsAuthenticated())
+        {
+            signInCheck();
+        }
+        Debug.logger.Log("checkd for sign in");
         leaderBoardToggle();
-        DebugText.text += "rechecked leaderboard toggle\n";
+        Debug.logger.Log("rechecked leaderboard toggle");
 
 
         three_by_three();
-        DebugText.text += "called three by three";
-    }
+	}
 
     private void leaderBoardToggle()
     {
@@ -62,8 +64,8 @@ public class MenuHandler : MonoBehaviour {
 
     private void signInCheck()
     {
-        DebugText.text += "first sign in: " + firstSignIn + " \n";
-        DebugText.text += "sucessful signin before: " +  signInSucess + " \n";
+        Debug.logger.Log("is this our first sign in attempt: ", firstSignIn);
+        Debug.logger.Log("have we had a sucessful signin before: ", signInSucess);
 
         if (firstSignIn)    // if its the first time loading the app we will attempt to sign them in
         {
@@ -95,7 +97,7 @@ public class MenuHandler : MonoBehaviour {
             {
                 //signIn.text = "Signed In";
                 leaderBoardButton.GetComponent<Button>().interactable = true;
-                DebugText.text += "You've sucessfully logged in! + \n";
+                Debug.Log("You've sucessfully logged in!");
                 PlayerPrefs.SetInt("leaderBoard", 1);
                 PlayerPrefs.SetInt("SignInSucess", 1);
             }
@@ -103,7 +105,7 @@ public class MenuHandler : MonoBehaviour {
             {
                 //signIn.text = "Failed";
                 leaderBoardButton.GetComponent<Button>().interactable = false;
-                DebugText.text += "Failed to log in + \n";
+                Debug.Log("Failed to log in");
                 PlayerPrefs.SetInt("leaderBoard", 0);
             }
         });
