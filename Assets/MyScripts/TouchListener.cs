@@ -84,8 +84,7 @@ public class TouchListener : MonoBehaviour {
                 for(int i = 0; i < curUsedButtons.Count; i++)
                 {
                     ButtonControls bc = fetchControls(curUsedButtons[i]);
-                    int randomNum = UnityEngine.Random.Range(0, 103);
-                    char newChar = bc.letterFrequency(randomNum);
+                    char newChar = bc.letterFrequency();
                     bc.changeCharacter(newChar.ToString());
                 }
 

@@ -9,7 +9,6 @@ public class ButtonControls : MonoBehaviour {
     public List<int> interactableButtons;
     public GameMaster gm;
     public string curChar;
-    public int randomNum;
 	//me 
 	public string st = "abcdefghijklmnopqrstuvwxyz";
     private bool start = true;
@@ -19,9 +18,8 @@ public class ButtonControls : MonoBehaviour {
         //curChar = this.GetComponentInChildren<Text>().text;
         //me 
         start = true;
-        randomNum = Random.Range(0, 103);
         //curChar = st[Random.Range(0, st.Length)].ToString();
-        curChar = letterFrequency(randomNum).ToString();
+        curChar = letterFrequency().ToString();
         gm = Camera.main.GetComponent<GameMaster>();
 		changeCharacter (curChar);
     }
@@ -55,8 +53,8 @@ public class ButtonControls : MonoBehaviour {
             //we need this to be a vowel
             while(checkCharacter(newChar) != 0)
             {
-                int rnd = Random.Range(0, 103);
-                newChar = letterFrequency(rnd).ToString();
+                
+                newChar = letterFrequency().ToString();
             }
             
 
@@ -65,8 +63,7 @@ public class ButtonControls : MonoBehaviour {
         {
             while (checkCharacter(newChar) != 1)
             {
-                int rnd = Random.Range(0, 103);
-                newChar = letterFrequency(rnd).ToString();
+                newChar = letterFrequency().ToString();
             }
         }
         else { 
@@ -83,108 +80,109 @@ public class ButtonControls : MonoBehaviour {
     }
 
     //gets letters based off approximate letter frequency
-    public char letterFrequency(int n)
+    public char letterFrequency()
     {
+        int n = Random.Range(0,  182303);
         char c = 'e';
 
-        if(n>= 0 && n <= 8)
-        {
-            c = 'a';
-        }else if (n > 8 && n <= 10)
-        {
-            c = 'b';
-        }else if (n > 10 && n <= 13)
-        {
-            c = 'c';
-        }else if(n>13 && n <= 17)
-        {
-            c = 'd';
-        }
-        else if (n > 17 && n <= 29)
+        if(n>= 0 && n <= 21912)
         {
             c = 'e';
-        }
-        else if (n > 29 && n <= 31)
+        }else if (n > 21912 && n <= 38499)
         {
-            c = 'f';
-        }
-        else if (n > 31 && n <= 33)
+            c = 't';
+        }else if (n > 38499 && n <= 53309)
         {
-            c = 'g';
-        }
-        else if (n > 33 && n <= 39)
-        {
-            c = 'h';
-        }
-        else if (n > 39 && n <= 46)
-        {
-            c = 'i';
-        }
-        else if (n > 46 && n <= 47)
-        {
-            c = 'j';
-        }
-        else if (n > 47 && n <= 48)
-        {
-            c = 'k';
-        }
-        else if (n > 48 && n <= 52)
-        {
-            c = 'l';
-        }
-        else if (n > 52 && n <= 54)
-        {
-            c = 'm';
-        }
-        else if (n > 54 && n <= 61)
-        {
-            c = 'n';
-        }
-        else if (n > 61 && n <= 69)
+            c = 'a';
+        }else if(n > 53309 && n <= 67312)
         {
             c = 'o';
         }
-        else if (n > 69 && n <= 71)
+        else if (n > 67312 && n <= 80630)
         {
-            c = 'p';
+            c = 'i';
         }
-        else if (n > 71 && n <= 72)
+        else if (n > 80603 && n <= 93296)
         {
-            c = 'q';
+            c = 'n';
         }
-        else if (n > 72 && n <= 78)
-        {
-            c = 'r';
-        }
-        else if (n > 78 && n <= 84)
+        else if (n > 93296 && n <= 104746)
         {
             c = 's';
         }
-        else if (n > 84 && n <= 93)
+        else if (n > 104746 && n <= 115723)
         {
-            c = 't';
+            c = 'r';
         }
-        else if (n > 93 && n <= 96)
+        else if (n > 115723 && n <= 12518)
+        {
+            c = 'h';
+        }
+        else if (n > 12518 && n <= 134392)
+        {
+            c = 'd';
+        }
+        else if (n > 134392 && n <= 141645)
+        {
+            c = 'l';
+        }
+        else if (n > 141645 && n <= 146891)
         {
             c = 'u';
         }
-        else if (n > 96 && n <= 97)
+        else if (n > 146891 && n <= 151834)
         {
-            c = 'v';
+            c = 'c';
         }
-        else if (n > 97 && n <= 99)
+        else if (n > 151834 && n <= 156595)
         {
-            c = 'w';
+            c = 'm';
         }
-        else if (n > 99 && n <= 100)
+        else if (n > 156595 && n <= 160795)
         {
-            c = 'x';
+            c = 'f';
         }
-        else if (n > 100 && n <= 102)
+        else if (n > 160795 && n <= 164648)
         {
             c = 'y';
         }
-        else
+        else if (n > 164648 && n <= 168467)
+        {
+            c = 'w';
+        }
+        else if (n > 168467 && n <= 172160)
+        {
+            c = 'g';
+        }
+        else if (n > 172160 && n <= 175476)
+        {
+            c = 'p';
+        }
+        else if (n > 175476 && n <= 178191)
+        {
+            c = 'b';
+        }
+        else if (n > 178191 && n <= 180210)
+        {
+            c = 'v';
+        }
+        else if (n > 180210 && n <= 181467)
+        {
+            c = 'k';
+        }
+        else if (n > 181467 && n <= 181782)
+        {
+            c = 'x';
+        }
+        else if (n > 181782 && n <= 181987)
+        {
+            c = 'q';
+        }
+        else if (n > 181987 && n <= 182175)
+        {
+            c = 'j';
+        }
+        else if( n > 182175 && n <= 182303)
         {
             c = 'z';
         }

@@ -75,8 +75,7 @@ public class timer: MonoBehaviour {
         for(int i = 0; i < tc.resetInteractions.Count; i++)
         {
             ButtonControls bc = tc.fetchControls(i);
-            int randomNum = UnityEngine.Random.Range(0, 103);
-            char newChar = bc.letterFrequency(randomNum);
+            char newChar = bc.letterFrequency();
             bc.changeCharacter(newChar.ToString());
         }
     }

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class GameMaster : MonoBehaviour {
 
     public List<bool> hasButtonClicked;
+    public int letterFreqLength = 182303;
 
     public string alphabet = "abcdefghijklmnopqrstuvwxyz";
     public GameObject[] buttonArray;
@@ -19,12 +20,14 @@ public class GameMaster : MonoBehaviour {
 
     void Awake()
     {
+        
         vowelMin = set_VowelMin();
         vowelMax = set_VowelMax();
     }
 
 	// Use this for initialization
 	void Start () {
+        Debug.logger.Log(letterFreqLength);
         buttonArray = GameObject.FindGameObjectsWithTag("Button");
         for (int i = 0; i < buttonArray.Length; i++)
         {
