@@ -1,4 +1,4 @@
-lastUpgrade=00927
+lastUpgrade=00934
 proj.AppId=519578082066
 proj.classDir=Assets
 proj.ConstantsClassName=gpg_constants
@@ -6,3 +6,4 @@ and.ResourceData=%3c%3fxml+version%3d%221.0%22+encoding%3d%22utf-8%22%3f%3e%0d%0
 and.ClientId=519578082066-kb6hqde6qil2p7pjlb0e9p7e6k3selao.apps.googleusercontent.com
 android.SetupDone=true
 and.BundleId=com.FatBobbyGaming.AlphaBurst
+proj.pluginVersion=0.9.34
