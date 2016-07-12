@@ -7,3 +7,4 @@ and.ClientId=519578082066-kb6hqde6qil2p7pjlb0e9p7e6k3selao.apps.googleuserconten
 android.SetupDone=true
 and.BundleId=com.FatBobbyGaming.AlphaBurst
 proj.pluginVersion=0.9.34
+proj.requireGPlus=false
